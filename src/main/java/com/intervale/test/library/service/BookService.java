@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService implements BaseService<Book> {
@@ -28,11 +29,29 @@ public class BookService implements BaseService<Book> {
 
     @Override
     public CreateBookResponseDto save(CreateBookRequestDto requestDto) {
-        final Book book = bookRepository.save(requestDto.toBook());
-        final Author author = new Author();
-        author.setFirstName(requestDto.getAuthors().);
-        authorRepository.save()
-        return CreateBookResponseDto.fromBook(book);
+        final Book book = requestDto.toBook();
+
+        //Save Authors in DB if they do not exist
+        for (String authorString : requestDto.getAuthors()) {
+            final String[] authorFirstAndLastNames = authorString.split(" ");
+
+            final Optional<Author> optionalAuthor = authorRepository
+                    .findByFirstNameAndLastName(authorFirstAndLastNames[0], authorFirstAndLastNames[1]);
+
+            if (optionalAuthor.isEmpty()) {
+                final Author author = new Author();
+                author.setFirstName(authorFirstAndLastNames[0]);
+                author.setLastName(authorFirstAndLastNames[1]);
+                final Author saveAuthor = authorRepository.save(author);
+                book.getAuthors().add(saveAuthor);
+            } else {
+                book.getAuthors().add(optionalAuthor.get());
+            }
+        }
+
+        final Book saveBook = bookRepository.save(book);
+
+        return CreateBookResponseDto.fromBook(saveBook);
     }
 
     @Override
