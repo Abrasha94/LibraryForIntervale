@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,10 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class Book extends BaseProduct {
+
+    public Book(String title, String description, LocalDate dateOfPublication) {
+        super(title, description, dateOfPublication);
+    }
 
     @ManyToMany
     @JoinTable(

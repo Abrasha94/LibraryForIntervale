@@ -7,6 +7,7 @@ import com.intervale.test.library.model.Author;
 import com.intervale.test.library.model.Book;
 import com.intervale.test.library.repository.AuthorRepository;
 import com.intervale.test.library.repository.BookRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,10 +21,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@NoArgsConstructor
 public class BookService implements BaseService<BookResponseDto, BookRequestDto> {
 
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
     public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
@@ -93,7 +95,7 @@ public class BookService implements BaseService<BookResponseDto, BookRequestDto>
         if (author.isEmpty()) {
             return null;
         }
-        final ArrayList<Author> authors = new ArrayList<>();
+        final List<Author> authors = new ArrayList<>();
         authors.add(author.get());
         final List<Book> books = bookRepository.findAllByAuthorsIn(authors);
         if (books.isEmpty()) {

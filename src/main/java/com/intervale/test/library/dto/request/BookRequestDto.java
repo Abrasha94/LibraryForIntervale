@@ -1,12 +1,16 @@
 package com.intervale.test.library.dto.request;
 
 import com.intervale.test.library.model.Book;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookRequestDto {
 
     private String title;
