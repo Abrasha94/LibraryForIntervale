@@ -8,6 +8,8 @@ import com.intervale.test.library.model.Publisher;
 import com.intervale.test.library.repository.MagazineRepository;
 import com.intervale.test.library.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,6 +52,7 @@ public class MagazineService implements BaseService<MagazineResponseDto, Magazin
     }
 
     @Override
+    @Cacheable("magazines")
     public MagazineResponseDto findById(Long id) {
         final Magazine magazine = magazineRepository.findById(id).orElseThrow(() ->
                 new MagazineNotFoundException("Can't find the magazine by id: " + id));
@@ -98,6 +101,7 @@ public class MagazineService implements BaseService<MagazineResponseDto, Magazin
     }
 
     @Override
+    @CacheEvict("magazines")
     public void deleteById(Long id) {
         magazineRepository.deleteById(id);
     }

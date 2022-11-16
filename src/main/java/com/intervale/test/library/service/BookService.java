@@ -8,6 +8,8 @@ import com.intervale.test.library.model.Book;
 import com.intervale.test.library.repository.AuthorRepository;
 import com.intervale.test.library.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,6 +52,7 @@ public class BookService implements BaseService<BookResponseDto, BookRequestDto>
     }
 
     @Override
+    @Cacheable("books")
     public BookResponseDto findById(Long id) {
         final Book book = bookRepository.findById(id).orElseThrow(() ->
                 new BookNotFoundException("Can't find the book by id: " + id));
@@ -100,6 +103,7 @@ public class BookService implements BaseService<BookResponseDto, BookRequestDto>
     }
 
     @Override
+    @CacheEvict("books")
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }

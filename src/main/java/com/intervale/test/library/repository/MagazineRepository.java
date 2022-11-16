@@ -1,7 +1,6 @@
 package com.intervale.test.library.repository;
 
 import com.intervale.test.library.model.Magazine;
-import com.intervale.test.library.model.Publisher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MagazineRepository extends JpaRepository<Magazine, Long> {

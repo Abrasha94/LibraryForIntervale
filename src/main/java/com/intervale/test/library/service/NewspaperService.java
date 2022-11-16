@@ -8,6 +8,8 @@ import com.intervale.test.library.model.Publisher;
 import com.intervale.test.library.repository.NewspaperRepository;
 import com.intervale.test.library.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,6 +52,7 @@ public class NewspaperService implements BaseService<NewspaperResponseDto, Newsp
     }
 
     @Override
+    @Cacheable("newspapers")
     public NewspaperResponseDto findById(Long id) {
         final Newspaper newspaper = newspaperRepository.findById(id).orElseThrow(() ->
                 new NewspaperNotFoundException("Can't find the newspaper by id: " + id));
@@ -98,6 +101,7 @@ public class NewspaperService implements BaseService<NewspaperResponseDto, Newsp
     }
 
     @Override
+    @CacheEvict("newspapers")
     public void deleteById(Long id) {
         newspaperRepository.deleteById(id);
     }
