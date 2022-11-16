@@ -3,19 +3,18 @@ package com.intervale.test.library.dto.request;
 import com.intervale.test.library.model.Book;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Getter
-public class CreateBookRequestDto implements BaseRequestDto{
+public class BookRequestDto {
 
     private String title;
     private String description;
-    private Date dateOfPublication;
+    private LocalDate dateOfPublication;
     private List<String> authors;
 
-    public Book toBook() {
+    public Book toBookWithoutAuthors() {
         final Book book = new Book();
         book.setTitle(title);
         book.setDescription(description);

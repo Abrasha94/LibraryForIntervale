@@ -8,19 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findByDateOfPublication(Date dateOfPublication);
+    List<Book> findByDateOfPublication(LocalDate dateOfPublication);
 
     List<Book> findByTitle(String title);
 
     List<Book> findByDescription(String description);
 
-    List<Book> findByAuthors(List<Author> authors);
+    List<Book> findAllByAuthorsIn(List<Author> authors);
 
     @Transactional
     @Modifying

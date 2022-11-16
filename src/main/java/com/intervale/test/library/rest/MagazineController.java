@@ -1,9 +1,9 @@
 package com.intervale.test.library.rest;
 
-import com.intervale.test.library.dto.request.BookRequestDto;
-import com.intervale.test.library.dto.response.BookResponseDto;
-import com.intervale.test.library.exception.BookNotFoundException;
-import com.intervale.test.library.service.BookService;
+import com.intervale.test.library.dto.request.MagazineRequestDto;
+import com.intervale.test.library.dto.response.MagazineResponseDto;
+import com.intervale.test.library.exception.MagazineNotFoundException;
+import com.intervale.test.library.service.MagazineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/books/")
-public class BookController {
+@RequestMapping("/api/magazines/")
+public class MagazineController {
 
-    private final BookService bookService;
+    private final MagazineService magazineService;
 
     @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
+    public MagazineController(MagazineService magazineService) {
+        this.magazineService = magazineService;
     }
 
     @PostMapping
-    public ResponseEntity<BookResponseDto> createBook(@RequestBody BookRequestDto requestDto) {
+    public ResponseEntity<MagazineResponseDto> createMagazine(@RequestBody MagazineRequestDto requestDto) {
         try {
-            final BookResponseDto responseDto = bookService.save(requestDto);
+            final MagazineResponseDto responseDto = magazineService.save(requestDto);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -33,30 +33,30 @@ public class BookController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<BookResponseDto> updateBookDescription(@PathVariable("id") Long id,
-                                                                 @RequestBody String description) {
+    public ResponseEntity<MagazineResponseDto> updateMagazineDescription(@PathVariable("id") Long id,
+                                                                         @RequestBody String description) {
         try {
-            final BookResponseDto responseDto = bookService.updateDescription(id, description);
+            final MagazineResponseDto responseDto = magazineService.updateDescription(id, description);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (BookNotFoundException e) {
+        } catch (MagazineNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("id/{id}")
-    public ResponseEntity<BookResponseDto> getBookById(@PathVariable("id") Long id) {
+    public ResponseEntity<MagazineResponseDto> getMagazineById(@PathVariable("id") Long id) {
         try {
-            final BookResponseDto responseDto = bookService.findById(id);
+            final MagazineResponseDto responseDto = magazineService.findById(id);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        } catch (BookNotFoundException e) {
+        } catch (MagazineNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     @GetMapping("date")
-    public ResponseEntity<List<BookResponseDto>> getBookByDateOfPublication(@RequestParam(value = "dateOfPublication") String dateOfPublication) {
+    public ResponseEntity<List<MagazineResponseDto>> getMagazineByDateOfPublication(@RequestParam(value = "dateOfPublication") String dateOfPublication) {
         try {
-            final List<BookResponseDto> responseDto = bookService.findByDateOfPublication(dateOfPublication);
+            final List<MagazineResponseDto> responseDto = magazineService.findByDateOfPublication(dateOfPublication);
             if (responseDto == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -67,9 +67,9 @@ public class BookController {
     }
 
     @GetMapping("title/{title}")
-    public ResponseEntity<List<BookResponseDto>> getBookByTitle(@PathVariable("title") String title) {
+    public ResponseEntity<List<MagazineResponseDto>> getMagazineByTitle(@PathVariable("title") String title) {
         try {
-            final List<BookResponseDto> responseDto = bookService.findByTitle(title);
+            final List<MagazineResponseDto> responseDto = magazineService.findByTitle(title);
             if (responseDto == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -80,9 +80,9 @@ public class BookController {
     }
 
     @GetMapping("desc/{description}")
-    public ResponseEntity<List<BookResponseDto>> getBookByDescription(@PathVariable("description") String description) {
+    public ResponseEntity<List<MagazineResponseDto>> getMagazineByDescription(@PathVariable("description") String description) {
         try {
-            final List<BookResponseDto> responseDto = bookService.findByDescription(description);
+            final List<MagazineResponseDto> responseDto = magazineService.findByDescription(description);
             if (responseDto == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -92,11 +92,10 @@ public class BookController {
         }
     }
 
-    @GetMapping("/author/{lastname}/{firstname}")
-    public ResponseEntity<List<BookResponseDto>> getBookByAuthor(@PathVariable("lastname") String lastName,
-                                                                 @PathVariable("firstname") String firstName) {
+    @GetMapping("publisher/{publisherNameOf}")
+    public ResponseEntity<List<MagazineResponseDto>> getMagazineByPublisher(@PathVariable("publisherNameOf") String publisherNameOf) {
         try {
-            final List<BookResponseDto> responseDto = bookService.findByAuthor(firstName, lastName);
+            final List<MagazineResponseDto> responseDto = magazineService.findByPublisher(publisherNameOf);
             if (responseDto == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -107,9 +106,9 @@ public class BookController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteBook(@PathVariable("id") Long id) {
+    public ResponseEntity<HttpStatus> deleteMagazine(@PathVariable("id") Long id) {
         try {
-            bookService.deleteById(id);
+            magazineService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

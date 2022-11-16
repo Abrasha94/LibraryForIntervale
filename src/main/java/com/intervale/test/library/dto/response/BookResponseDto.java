@@ -2,23 +2,25 @@ package com.intervale.test.library.dto.response;
 
 import com.intervale.test.library.model.Author;
 import com.intervale.test.library.model.Book;
+import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Setter
-public class CreateBookResponseDto implements BaseResponseDto {
+@Getter
+public class BookResponseDto {
 
     private Long id;
     private String title;
     private String description;
-    private Date dateOfPublication;
+    private LocalDate dateOfPublication;
     private List<String> authors;
 
-    public static CreateBookResponseDto fromBook(Book book) {
-        final CreateBookResponseDto responseDto = new CreateBookResponseDto();
+    public static BookResponseDto fromBook(Book book) {
+        final BookResponseDto responseDto = new BookResponseDto();
         responseDto.setId(book.getId());
         responseDto.setTitle(book.getTitle());
         responseDto.setDescription(book.getDescription());

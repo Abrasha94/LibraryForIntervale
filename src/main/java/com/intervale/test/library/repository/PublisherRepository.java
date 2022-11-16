@@ -1,0 +1,13 @@
+package com.intervale.test.library.repository;
+
+import com.intervale.test.library.model.Publisher;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface PublisherRepository extends JpaRepository<Publisher, Long> {
+
+    Optional<Publisher> findByNameOf(String nameOf);
+}
