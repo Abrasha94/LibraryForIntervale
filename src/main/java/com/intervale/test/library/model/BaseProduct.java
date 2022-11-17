@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.util.Date;
+import java.time.LocalDate;
 
 @MappedSuperclass
 @Getter
@@ -30,14 +30,14 @@ public class BaseProduct {
     private String description;
 
     @Column(name = "dateOfPublication")
-    private Date dateOfPublication;
+    private LocalDate dateOfPublication;
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
 
-    public BaseProduct(String title, String description, Date dateOfPublication) {
+    public BaseProduct(String title, String description, LocalDate dateOfPublication) {
         this.title = title;
         this.description = description;
         this.dateOfPublication = dateOfPublication;

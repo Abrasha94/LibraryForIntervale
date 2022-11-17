@@ -20,8 +20,8 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "city")
-    private String city;
+    @Column(name = "nameOf")
+    private String nameOf;
 
     @OneToMany(mappedBy = "publisher")
     @ToString.Exclude
@@ -31,7 +31,8 @@ public class Publisher {
     @ToString.Exclude
     private List<Newspaper> newspapers;
 
-    public Publisher(String city) {
-        this.city = city;
+    public Publisher(String nameOf) {
+        this.nameOf = nameOf;
     }
+
 }
