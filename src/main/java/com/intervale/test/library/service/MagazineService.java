@@ -1,7 +1,6 @@
 package com.intervale.test.library.service;
 
 import com.intervale.test.library.dto.request.MagazineRequestDto;
-import com.intervale.test.library.dto.response.MagazineResponseDto;
 import com.intervale.test.library.exception.MagazineNotFoundException;
 import com.intervale.test.library.model.Magazine;
 import com.intervale.test.library.model.Publisher;
@@ -16,10 +15,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class MagazineService implements BaseService<MagazineResponseDto, MagazineRequestDto> {
+public class MagazineService implements BaseService<Magazine, MagazineRequestDto> {
 
     private final MagazineRepository magazineRepository;
     private final PublisherRepository publisherRepository;
@@ -31,73 +29,68 @@ public class MagazineService implements BaseService<MagazineResponseDto, Magazin
     }
 
     @Override
-    public MagazineResponseDto save(MagazineRequestDto requestDto) {
+    public Magazine save(MagazineRequestDto requestDto) {
         final Magazine magazine = requestDto.toMagazineWithoutPublisher();
 
         //Save publisher if nor exist
         savePublisherIfNotExist(requestDto, magazine);
 
-        final Magazine saveMagazine = magazineRepository.save(magazine);
-
-        return MagazineResponseDto.fromMagazine(saveMagazine);
+        return magazineRepository.save(magazine);
     }
 
     @Override
-    public MagazineResponseDto updateDescription(Long id, String description) {
+    public Magazine updateDescription(Long id, String description) {
         final Magazine magazine = magazineRepository.findById(id).orElseThrow(() ->
                 new MagazineNotFoundException("Can't find the magazine by id: " + id));
         magazineRepository.updateDescription(description, id);
         magazine.setDescription(description);
-        return MagazineResponseDto.fromMagazine(magazine);
+        return magazine;
     }
 
     @Override
     @Cacheable("magazines")
-    public MagazineResponseDto findById(Long id) {
-        final Magazine magazine = magazineRepository.findById(id).orElseThrow(() ->
+    public Magazine findById(Long id) {
+        return magazineRepository.findById(id).orElseThrow(() ->
                 new MagazineNotFoundException("Can't find the magazine by id: " + id));
-        return MagazineResponseDto.fromMagazine(magazine);
     }
 
     @Override
-    public List<MagazineResponseDto> findByDateOfPublication(String dateOfPublication) {
+    public List<Magazine> findByDateOfPublication(String dateOfPublication) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
         final LocalDate date = LocalDate.parse(dateOfPublication, formatter);
         final List<Magazine> magazines = magazineRepository.findByDateOfPublication(date);
         if (magazines.isEmpty()) {
             return null;
         }
-        return magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList());
+        return magazines;
     }
 
     @Override
-    public List<MagazineResponseDto> findByTitle(String title) {
+    public List<Magazine> findByTitle(String title) {
         final List<Magazine> magazines = magazineRepository.findByTitle(title);
         if (magazines.isEmpty()) {
             return null;
         }
-        return magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList());
+        return magazines;
     }
 
     @Override
-    public List<MagazineResponseDto> findByDescription(String description) {
+    public List<Magazine> findByDescription(String description) {
         final List<Magazine> magazines = magazineRepository.findByDescription(description);
         if (magazines.isEmpty()) {
             return null;
         }
-        return magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList());
+        return magazines;
     }
 
-    public List<MagazineResponseDto> findByPublisher(String publisherNameOf) {
+    public List<Magazine> findByPublisher(String publisherNameOf) {
         final Optional<Publisher> publisher = publisherRepository.findByNameOf(publisherNameOf);
 
         if (publisher.isEmpty()) {
             return null;
         }
 
-        final List<Magazine> magazines = publisher.get().getMagazines();
-
-        return magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList());
+        return publisher.get().getMagazines();
     }
 
     @Override

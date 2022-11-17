@@ -3,13 +3,16 @@ package com.intervale.test.library.rest;
 import com.intervale.test.library.dto.request.MagazineRequestDto;
 import com.intervale.test.library.dto.response.MagazineResponseDto;
 import com.intervale.test.library.exception.MagazineNotFoundException;
+import com.intervale.test.library.model.Magazine;
 import com.intervale.test.library.service.MagazineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/magazines/")
@@ -25,10 +28,10 @@ public class MagazineController {
     @PostMapping
     public ResponseEntity<MagazineResponseDto> createMagazine(@RequestBody MagazineRequestDto requestDto) {
         try {
-            final MagazineResponseDto responseDto = magazineService.save(requestDto);
-            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+            final Magazine magazine = magazineService.save(requestDto);
+            return new ResponseEntity<>(MagazineResponseDto.fromMagazine(magazine), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Magazine Not Created", e);
         }
     }
 
@@ -36,72 +39,77 @@ public class MagazineController {
     public ResponseEntity<MagazineResponseDto> updateMagazineDescription(@PathVariable("id") Long id,
                                                                          @RequestBody String description) {
         try {
-            final MagazineResponseDto responseDto = magazineService.updateDescription(id, description);
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            final Magazine magazine = magazineService.updateDescription(id, description);
+            return new ResponseEntity<>(MagazineResponseDto.fromMagazine(magazine), HttpStatus.OK);
         } catch (MagazineNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Updated", e);
         }
     }
 
     @GetMapping("id/{id}")
     public ResponseEntity<MagazineResponseDto> getMagazineById(@PathVariable("id") Long id) {
         try {
-            final MagazineResponseDto responseDto = magazineService.findById(id);
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            final Magazine magazine = magazineService.findById(id);
+            return new ResponseEntity<>(MagazineResponseDto.fromMagazine(magazine), HttpStatus.OK);
         } catch (MagazineNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found", e);
         }
     }
 
     @GetMapping("date")
-    public ResponseEntity<List<MagazineResponseDto>> getMagazineByDateOfPublication(@RequestParam(value = "dateOfPublication") String dateOfPublication) {
+    public ResponseEntity<List<MagazineResponseDto>> getMagazineByDateOfPublication(
+            @RequestParam(value = "dateOfPublication") String dateOfPublication) {
         try {
-            final List<MagazineResponseDto> responseDto = magazineService.findByDateOfPublication(dateOfPublication);
-            if (responseDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            final List<Magazine> magazines = magazineService.findByDateOfPublication(dateOfPublication);
+            if (magazines == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
             }
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error On Server", e);
         }
     }
 
     @GetMapping("title/{title}")
     public ResponseEntity<List<MagazineResponseDto>> getMagazineByTitle(@PathVariable("title") String title) {
         try {
-            final List<MagazineResponseDto> responseDto = magazineService.findByTitle(title);
-            if (responseDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            final List<Magazine> magazines = magazineService.findByTitle(title);
+            if (magazines == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
             }
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error On Server", e);
         }
     }
 
     @GetMapping("desc/{description}")
     public ResponseEntity<List<MagazineResponseDto>> getMagazineByDescription(@PathVariable("description") String description) {
         try {
-            final List<MagazineResponseDto> responseDto = magazineService.findByDescription(description);
-            if (responseDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            final List<Magazine> magazines = magazineService.findByDescription(description);
+            if (magazines == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
             }
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error On Server", e);
         }
     }
 
     @GetMapping("publisher/{publisherNameOf}")
     public ResponseEntity<List<MagazineResponseDto>> getMagazineByPublisher(@PathVariable("publisherNameOf") String publisherNameOf) {
         try {
-            final List<MagazineResponseDto> responseDto = magazineService.findByPublisher(publisherNameOf);
-            if (responseDto == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            final List<Magazine> magazines = magazineService.findByPublisher(publisherNameOf);
+            if (magazines == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
             }
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error On Server", e);
         }
     }
 
@@ -111,7 +119,7 @@ public class MagazineController {
             magazineService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error On Server", e);
         }
     }
 }

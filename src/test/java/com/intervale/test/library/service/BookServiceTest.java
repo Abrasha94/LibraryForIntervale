@@ -1,7 +1,6 @@
 package com.intervale.test.library.service;
 
 import com.intervale.test.library.dto.request.BookRequestDto;
-import com.intervale.test.library.dto.response.BookResponseDto;
 import com.intervale.test.library.model.Author;
 import com.intervale.test.library.model.Book;
 import com.intervale.test.library.repository.AuthorRepository;
@@ -44,61 +43,61 @@ class BookServiceTest {
     void whenSaveBook_thenDtoEqualBook() {
         when(bookRepository.save(any(Book.class))).thenReturn(book);
 
-        final BookResponseDto responseDto = bookService.save(requestDto);
+        final Book saveBook = bookService.save(requestDto);
 
         verify(bookRepository, times(1)).save(any(Book.class));
-        assertThat(responseDto.getTitle()).isEqualTo("title");
-        assertThat(responseDto.getDescription()).isEqualTo("description");
+        assertThat(saveBook.getTitle()).isEqualTo("title");
+        assertThat(saveBook.getDescription()).isEqualTo("description");
     }
 
     @Test
     void whenUpdate_thenEqualDescriptions() {
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        final BookResponseDto responseDto = bookService.updateDescription(1L, "Updated description");
+        final Book updatedBook = bookService.updateDescription(1L, "Updated description");
 
         verify(bookRepository, times(1)).updateDescription("Updated description", 1L);
-        assertThat(responseDto.getDescription()).isEqualTo("Updated description");
+        assertThat(updatedBook.getDescription()).isEqualTo("Updated description");
     }
 
     @Test
     void whenFindById_thenReturnValidDto() {
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        final BookResponseDto responseDto = bookService.findById(1L);
+        final Book findedBook = bookService.findById(1L);
 
         verify(bookRepository, times(1)).findById(1L);
-        assertThat(responseDto.getTitle()).isEqualTo("title");
+        assertThat(findedBook.getTitle()).isEqualTo("title");
     }
 
     @Test
     void whenFindByDateOfPublication_thenReturnNotEmptyList() {
         when(bookRepository.findByDateOfPublication(any(LocalDate.class))).thenReturn(List.of(book));
 
-        final List<BookResponseDto> responseDto = bookService.findByDateOfPublication("2022-11-16");
+        final List<Book> books = bookService.findByDateOfPublication("2022-11-16");
 
         verify(bookRepository, times(1)).findByDateOfPublication(any(LocalDate.class));
-        assertThat(responseDto).isNotEmpty();
+        assertThat(books).isNotEmpty();
     }
 
     @Test
     void whenFindByTitle_thenReturnValidDto() {
         when(bookRepository.findByTitle("title")).thenReturn(List.of(book));
 
-        final List<BookResponseDto> responseDto = bookService.findByTitle("title");
+        final List<Book> books = bookService.findByTitle("title");
 
         verify(bookRepository, times(1)).findByTitle("title");
-        assertThat(responseDto.get(0).getTitle()).isEqualTo("title");
+        assertThat(books.get(0).getTitle()).isEqualTo("title");
     }
 
     @Test
     void whenFindByDescription_thenReturnValidDto() {
         when(bookRepository.findByDescription("description")).thenReturn(List.of(book));
 
-        final List<BookResponseDto> responseDto = bookService.findByDescription("description");
+        final List<Book> books = bookService.findByDescription("description");
 
         verify(bookRepository, times(1)).findByDescription("description");
-        assertThat(responseDto.get(0).getDescription()).isEqualTo("description");
+        assertThat(books.get(0).getDescription()).isEqualTo("description");
     }
 
     @Test
@@ -107,10 +106,10 @@ class BookServiceTest {
         when(bookRepository.findAllByAuthorsIn(List.of(author))).thenReturn(List.of(book));
 
 
-        final List<BookResponseDto> responseDto = bookService.findByAuthor("test", "test");
+        final List<Book> books = bookService.findByAuthor("test", "test");
 
         verify(bookRepository, times(1)).findAllByAuthorsIn(List.of(author));
-        assertThat(responseDto.get(0).getTitle()).isEqualTo("title");
+        assertThat(books.get(0).getTitle()).isEqualTo("title");
     }
 
     @Test

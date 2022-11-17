@@ -1,7 +1,6 @@
 package com.intervale.test.library.service;
 
 import com.intervale.test.library.dto.request.NewspaperRequestDto;
-import com.intervale.test.library.dto.response.NewspaperResponseDto;
 import com.intervale.test.library.model.Newspaper;
 import com.intervale.test.library.model.Publisher;
 import com.intervale.test.library.repository.NewspaperRepository;
@@ -49,61 +48,61 @@ class NewspaperServiceTest {
     void whenSaveNewspaper_thenReturnValidDto() {
         when(newspaperRepository.save(any(Newspaper.class))).thenReturn(newspaper);
 
-        final NewspaperResponseDto responseDto = newspaperService.save(requestDto);
+        final Newspaper savedNewspaper = newspaperService.save(requestDto);
 
         verify(newspaperRepository, times(1)).save(any(Newspaper.class));
-        assertThat(responseDto.getTitle()).isEqualTo("title");
-        assertThat(responseDto.getDescription()).isEqualTo("description");
+        assertThat(savedNewspaper.getTitle()).isEqualTo("title");
+        assertThat(savedNewspaper.getDescription()).isEqualTo("description");
     }
 
     @Test
     void WhenUpdateDescription_ThenEqualDescription() {
         when(newspaperRepository.findById(1L)).thenReturn(Optional.of(newspaper));
 
-        final NewspaperResponseDto responseDto = newspaperService.updateDescription(1L, "Updated description");
+        final Newspaper updatedNewspaper = newspaperService.updateDescription(1L, "Updated description");
 
         verify(newspaperRepository, times(1)).updateDescription("Updated description", 1L);
-        assertThat(responseDto.getDescription()).isEqualTo("Updated description");
+        assertThat(updatedNewspaper.getDescription()).isEqualTo("Updated description");
     }
 
     @Test
     void whenFindById_thenReturnValidDto() {
         when(newspaperRepository.findById(1L)).thenReturn(Optional.of(newspaper));
 
-        final NewspaperResponseDto responseDto = newspaperService.findById(1L);
+        final Newspaper findedNewspaper = newspaperService.findById(1L);
 
         verify(newspaperRepository, times(1)).findById(1L);
-        assertThat(responseDto.getTitle()).isEqualTo("title");
+        assertThat(findedNewspaper.getTitle()).isEqualTo("title");
     }
 
     @Test
     void whenFindByDateOfPublication_thenReturnNotEmptyList() {
         when(newspaperRepository.findByDateOfPublication(any(LocalDate.class))).thenReturn(List.of(newspaper));
 
-        final List<NewspaperResponseDto> responseDto = newspaperService.findByDateOfPublication("2022-11-16");
+        final List<Newspaper> newspapers = newspaperService.findByDateOfPublication("2022-11-16");
 
         verify(newspaperRepository, times(1)).findByDateOfPublication(any(LocalDate.class));
-        assertThat(responseDto).isNotEmpty();
+        assertThat(newspapers).isNotEmpty();
     }
 
     @Test
     void whenFindByTitle_thenReturnValidDto() {
         when(newspaperRepository.findByTitle("title")).thenReturn(List.of(newspaper));
 
-        final List<NewspaperResponseDto> responseDto = newspaperService.findByTitle("title");
+        final List<Newspaper> newspapers = newspaperService.findByTitle("title");
 
         verify(newspaperRepository, times(1)).findByTitle("title");
-        assertThat(responseDto.get(0).getTitle()).isEqualTo("title");
+        assertThat(newspapers.get(0).getTitle()).isEqualTo("title");
     }
 
     @Test
     void whenFindByDescription_thenReturnValidDto() {
         when(newspaperRepository.findByDescription("description")).thenReturn(List.of(newspaper));
 
-        final List<NewspaperResponseDto> responseDto = newspaperService.findByDescription("description");
+        final List<Newspaper> newspapers = newspaperService.findByDescription("description");
 
         verify(newspaperRepository, times(1)).findByDescription("description");
-        assertThat(responseDto.get(0).getDescription()).isEqualTo("description");
+        assertThat(newspapers.get(0).getDescription()).isEqualTo("description");
     }
 
     @Test
@@ -111,10 +110,10 @@ class NewspaperServiceTest {
         publisher.setNewspapers(List.of(newspaper));
         when(publisherRepository.findByNameOf("publisher")).thenReturn(Optional.of(publisher));
 
-        final List<NewspaperResponseDto> responseDto = newspaperService.findByPublisher("publisher");
+        final List<Newspaper> newspapers = newspaperService.findByPublisher("publisher");
 
-        assertThat(responseDto.get(0).getTitle()).isEqualTo("title");
-        assertThat(responseDto.get(0).getDescription()).isEqualTo("description");
+        assertThat(newspapers.get(0).getTitle()).isEqualTo("title");
+        assertThat(newspapers.get(0).getDescription()).isEqualTo("description");
     }
 
     @Test
