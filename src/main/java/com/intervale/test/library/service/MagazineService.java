@@ -40,8 +40,7 @@ public class MagazineService implements BaseService<Magazine, MagazineRequestDto
 
     @Override
     public Magazine updateDescription(Long id, String description) {
-        final Magazine magazine = magazineRepository.findById(id).orElseThrow(() ->
-                new MagazineNotFoundException("Can't find the magazine by id: " + id));
+        final Magazine magazine = findById(id);
         magazineRepository.updateDescription(description, id);
         magazine.setDescription(description);
         return magazine;

@@ -40,8 +40,7 @@ public class NewspaperService implements BaseService<Newspaper, NewspaperRequest
 
     @Override
     public Newspaper updateDescription(Long id, String description) {
-        final Newspaper newspaper = newspaperRepository.findById(id).orElseThrow(() ->
-                new NewspaperNotFoundException("Can't find the newspaper by id: " + id));
+        final Newspaper newspaper = findById(id);
         newspaperRepository.updateDescription(description, id);
         newspaper.setDescription(description);
         return newspaper;

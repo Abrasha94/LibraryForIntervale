@@ -43,7 +43,7 @@ public class BookService implements BaseService<Book, BookRequestDto> {
 
     @Override
     public Book updateDescription(Long id, String description) {
-        final Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Can't find the book by id: " + id));
+        final Book book = findById(id);
         bookRepository.updateDescription(description, id);
         book.setDescription(description);
         return book;
