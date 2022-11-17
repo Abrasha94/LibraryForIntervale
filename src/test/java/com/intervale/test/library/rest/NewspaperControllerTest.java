@@ -1,9 +1,9 @@
 package com.intervale.test.library.rest;
 
-import com.intervale.test.library.dto.request.BookRequestDto;
-import com.intervale.test.library.model.Author;
-import com.intervale.test.library.model.Book;
-import com.intervale.test.library.service.BookService;
+import com.intervale.test.library.dto.request.NewspaperRequestDto;
+import com.intervale.test.library.model.Newspaper;
+import com.intervale.test.library.model.Publisher;
+import com.intervale.test.library.service.NewspaperService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,50 +20,46 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(BookController.class)
-class BookControllerTest {
+@WebMvcTest(NewspaperController.class)
+class NewspaperControllerTest {
 
     @MockBean
-    BookService bookService;
+    NewspaperService newspaperService;
 
     @Autowired
     MockMvc mockMvc;
 
-    private final Book book = new Book("test", "test", LocalDate.EPOCH);
+    private final Newspaper newspaper = new Newspaper("test", "test", LocalDate.EPOCH);
 
     @BeforeEach
     void setUp() {
-        book.setId(1L);
-        book.setAuthors(List.of(new Author("testA", "testA")));
-        final List<Book> bookList = List.of(book);
-        when(bookService.save(any(BookRequestDto.class))).thenReturn(book);
-        when(bookService.updateDescription(1L, "updatedTest")).thenReturn(book);
-        when(bookService.findById(1L)).thenReturn(book);
-        when(bookService.findByTitle("test")).thenReturn(bookList);
-        when(bookService.findByDateOfPublication("2022-11-16")).thenReturn(bookList);
-        when(bookService.findByDescription("test")).thenReturn(bookList);
-        when(bookService.findByAuthor("test", "test")).thenReturn(bookList);
+        newspaper.setId(1L);
+        newspaper.setPublisher(new Publisher("testP"));
+        final List<Newspaper> newspaperList = List.of(newspaper);
+        when(newspaperService.save(any(NewspaperRequestDto.class))).thenReturn(newspaper);
+        when(newspaperService.updateDescription(1L, "updatedTest")).thenReturn(newspaper);
+        when(newspaperService.findById(1L)).thenReturn(newspaper);
+        when(newspaperService.findByTitle("test")).thenReturn(newspaperList);
+        when(newspaperService.findByDateOfPublication("2022-11-16")).thenReturn(newspaperList);
+        when(newspaperService.findByDescription("test")).thenReturn(newspaperList);
+        when(newspaperService.findByPublisher("test")).thenReturn(newspaperList);
     }
 
     @Test
-    void whenCreateBook_thenReturnRightDto() throws Exception {
+    void whenCreateNewspaper_thenReturnRightDto() throws Exception {
 
-        final MockHttpServletRequestBuilder request = post("/api/books/")
+        final MockHttpServletRequestBuilder request = post("/api/newspapers/")
                 .accept(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"title\":\"test\",\n" +
                         "    \"description\":\"test\",\n" +
                         "    \"dateOfPublication\":\"2022-11-17\",\n" +
-                        "    \"author\":\"test\"\n" +
+                        "    \"publisher\":\"test\"\n" +
                         "}")
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -73,8 +69,8 @@ class BookControllerTest {
     }
 
     @Test
-    void whenUpdateBookDescription_thenReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = put("/api/books/{id}", 1L)
+    void whenUpdateNewspaperDescription_thenReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = put("/api/newspapers/{id}", 1L)
                 .contentType(MediaType.TEXT_HTML)
                 .content("updatedTest");
 
@@ -84,8 +80,8 @@ class BookControllerTest {
     }
 
     @Test
-    void whenGetBookById_thenReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/id/{id}", 1L);
+    void whenGetNewspaperById_thenReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/newspapers/id/{id}", 1L);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -93,8 +89,8 @@ class BookControllerTest {
     }
 
     @Test
-    void whenGetBookByDateOfPublication_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/date")
+    void whenGetNewspaperByDateOfPublication_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/newspapers/date")
                 .param("dateOfPublication", "2022-11-16");
 
         mockMvc.perform(request)
@@ -103,8 +99,8 @@ class BookControllerTest {
     }
 
     @Test
-    void whenGetBookByTitle_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/title/{title}", "test");
+    void whenGetNewspaperByTitle_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/newspapers/title/{title}", "test");
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -112,8 +108,8 @@ class BookControllerTest {
     }
 
     @Test
-    void whenGetBookByDescription_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/desc/{description}",
+    void whenGetNewspaperByDescription_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/newspapers/desc/{description}",
                 "test");
 
         mockMvc.perform(request)
@@ -122,9 +118,9 @@ class BookControllerTest {
     }
 
     @Test
-    void whenGetBookByAuthor_thenReturnOK() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/author/{lastname}/{firstname}",
-                "test", "test");
+    void whenGetNewspaperByAuthor_thenReturnOK() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/newspapers/publisher/{publisherNameOf}",
+                "test");
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -132,10 +128,11 @@ class BookControllerTest {
     }
 
     @Test
-    void whenDeleteBook_thenResponseStatusNoContent() throws Exception {
-        final MockHttpServletRequestBuilder request = delete("/api/books/{id}", 1L);
+    void whenDeleteNewspaper_thenResponseStatusNoContent() throws Exception {
+        final MockHttpServletRequestBuilder request = delete("/api/newspapers/{id}", 1L);
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
+
 }

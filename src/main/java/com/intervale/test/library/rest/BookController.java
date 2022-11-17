@@ -50,7 +50,7 @@ public class BookController {
             final Book book = bookService.updateDescription(id, description);
             return new ResponseEntity<>(BookResponseDto.fromBook(book), HttpStatus.OK);
         } catch (BookNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book Not Updated", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book Not Updated", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class BookController {
             final Book book = bookService.findById(id);
             return new ResponseEntity<>(BookResponseDto.fromBook(book), HttpStatus.OK);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book Not Found", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book Not Found", e);
         }
     }
 
@@ -70,7 +70,7 @@ public class BookController {
         try {
             final List<Book> books = bookService.findByDateOfPublication(dateOfPublication);
             if (books == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book Not Found");
             }
             return new ResponseEntity<>(books.stream().map(BookResponseDto::fromBook).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -84,7 +84,7 @@ public class BookController {
         try {
             final List<Book> books = bookService.findByTitle(title);
             if (books == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book Not Found");
             }
             return new ResponseEntity<>(books.stream().map(BookResponseDto::fromBook).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -98,7 +98,7 @@ public class BookController {
         try {
             final List<Book> books = bookService.findByDescription(description);
             if (books == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book Not Found");
             }
             return new ResponseEntity<>(books.stream().map(BookResponseDto::fromBook).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -113,7 +113,7 @@ public class BookController {
         try {
             final List<Book> books = bookService.findByAuthor(firstName, lastName);
             if (books == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book or Author Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Book or Author Not Found");
             }
             return new ResponseEntity<>(books.stream().map(BookResponseDto::fromBook).collect(Collectors.toList()),
                     HttpStatus.OK);

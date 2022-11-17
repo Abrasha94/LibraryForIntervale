@@ -20,12 +20,15 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(BookController.class)
+@WebMvcTest(MagazineController.class)
 class MagazineControllerTest {
 
     @MockBean
@@ -69,8 +72,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenUpdateBookDescription_thenReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = put("/api/books/{id}", 1L)
+    void whenUpdateMagazineDescription_thenReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = put("/api/magazines/{id}", 1L)
                 .contentType(MediaType.TEXT_HTML)
                 .content("updatedTest");
 
@@ -80,8 +83,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenGetBookById_thenReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/id/{id}", 1L);
+    void whenGetMagazineById_thenReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/magazines/id/{id}", 1L);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -89,8 +92,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenGetBookByDateOfPublication_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/date")
+    void whenGetMagazineByDateOfPublication_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/magazines/date")
                 .param("dateOfPublication", "2022-11-16");
 
         mockMvc.perform(request)
@@ -99,8 +102,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenGetBookByTitle_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/title/{title}", "test");
+    void whenGetMagazineByTitle_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/magazines/title/{title}", "test");
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -108,8 +111,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenGetBookByDescription_thenReturnReturnRightDto() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/desc/{description}",
+    void whenGetMagazineByDescription_thenReturnReturnRightDto() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/magazines/desc/{description}",
                 "test");
 
         mockMvc.perform(request)
@@ -118,9 +121,9 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenGetBookByAuthor_thenReturnOK() throws Exception {
-        final MockHttpServletRequestBuilder request = get("/api/books/author/{lastname}/{firstname}",
-                "test", "test");
+    void whenGetMagazineByAuthor_thenReturnOK() throws Exception {
+        final MockHttpServletRequestBuilder request = get("/api/magazines/publisher/{publisherNameOf}",
+                "test");
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -128,8 +131,8 @@ class MagazineControllerTest {
     }
 
     @Test
-    void whenDeleteBook_thenResponseStatusNoContent() throws Exception {
-        final MockHttpServletRequestBuilder request = delete("/api/books/{id}", 1L);
+    void whenDeleteMagazine_thenResponseStatusNoContent() throws Exception {
+        final MockHttpServletRequestBuilder request = delete("/api/magazines/{id}", 1L);
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());

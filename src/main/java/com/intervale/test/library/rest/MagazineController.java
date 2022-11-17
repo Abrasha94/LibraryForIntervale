@@ -42,7 +42,7 @@ public class MagazineController {
             final Magazine magazine = magazineService.updateDescription(id, description);
             return new ResponseEntity<>(MagazineResponseDto.fromMagazine(magazine), HttpStatus.OK);
         } catch (MagazineNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Updated", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Updated", e);
         }
     }
 
@@ -52,7 +52,7 @@ public class MagazineController {
             final Magazine magazine = magazineService.findById(id);
             return new ResponseEntity<>(MagazineResponseDto.fromMagazine(magazine), HttpStatus.OK);
         } catch (MagazineNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Found", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class MagazineController {
         try {
             final List<Magazine> magazines = magazineService.findByDateOfPublication(dateOfPublication);
             if (magazines == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Found");
             }
             return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -76,7 +76,7 @@ public class MagazineController {
         try {
             final List<Magazine> magazines = magazineService.findByTitle(title);
             if (magazines == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Found");
             }
             return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -90,7 +90,7 @@ public class MagazineController {
         try {
             final List<Magazine> magazines = magazineService.findByDescription(description);
             if (magazines == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Found");
             }
             return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -104,7 +104,7 @@ public class MagazineController {
         try {
             final List<Magazine> magazines = magazineService.findByPublisher(publisherNameOf);
             if (magazines == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Magazine Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Magazine Not Found");
             }
             return new ResponseEntity<>(magazines.stream().map(MagazineResponseDto::fromMagazine).collect(Collectors.toList()),
                     HttpStatus.OK);

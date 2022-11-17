@@ -42,7 +42,7 @@ public class NewspaperController {
             final Newspaper newspaper = newspaperService.updateDescription(id, description);
             return new ResponseEntity<>(NewspaperResponseDto.fromNewspaper(newspaper), HttpStatus.OK);
         } catch (NewspaperNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Updated", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Updated", e);
         }
     }
 
@@ -52,7 +52,7 @@ public class NewspaperController {
             final Newspaper newspaper = newspaperService.findById(id);
             return new ResponseEntity<>(NewspaperResponseDto.fromNewspaper(newspaper), HttpStatus.OK);
         } catch (NewspaperNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Found", e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Found", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class NewspaperController {
         try {
             final List<Newspaper> newspapers = newspaperService.findByDateOfPublication(dateOfPublication);
             if (newspapers == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Found");
             }
             return new ResponseEntity<>(newspapers.stream().map(NewspaperResponseDto::fromNewspaper).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -76,7 +76,7 @@ public class NewspaperController {
         try {
             final List<Newspaper> newspapers = newspaperService.findByTitle(title);
             if (newspapers == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Found");
             }
             return new ResponseEntity<>(newspapers.stream().map(NewspaperResponseDto::fromNewspaper).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -90,7 +90,7 @@ public class NewspaperController {
         try {
             final List<Newspaper> newspapers = newspaperService.findByDescription(description);
             if (newspapers == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Found");
             }
             return new ResponseEntity<>(newspapers.stream().map(NewspaperResponseDto::fromNewspaper).collect(Collectors.toList()),
                     HttpStatus.OK);
@@ -104,7 +104,7 @@ public class NewspaperController {
         try {
             final List<Newspaper> newspapers = newspaperService.findByPublisher(publisherNameOf);
             if (newspapers == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Newspaper Not Found");
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Newspaper Not Found");
             }
             return new ResponseEntity<>(newspapers.stream().map(NewspaperResponseDto::fromNewspaper).collect(Collectors.toList()),
                     HttpStatus.OK);
